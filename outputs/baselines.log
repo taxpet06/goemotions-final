@@ -1,0 +1,7 @@
+tfidf=C0.1_ng1 dev macro-F1 0.4804
+tfidf=C0.1_ng2 dev macro-F1 0.4769
+tfidf=C1_ng1 dev macro-F1 0.4894
+tfidf=C1_ng2 dev macro-F1 0.4945
+tfidf=C10_ng1 dev macro-F1 0.459
+tfidf=C10_ng2 dev macro-F1 0.4875
+best TF-IDF config: tfidf=C1_ng2

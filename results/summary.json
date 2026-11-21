@@ -1,0 +1,109 @@
+{
+ "selection": {
+  "tfidf": {
+   "dev_macro_f1": {
+    "tfidf=C0.1_ng1": 0.48040230127094574,
+    "tfidf=C0.1_ng2": 0.4768910383685017,
+    "tfidf=C10_ng1": 0.45903497247150093,
+    "tfidf=C10_ng2": 0.48747377495624133,
+    "tfidf=C1_ng1": 0.48942018190219455,
+    "tfidf=C1_ng2": 0.4944581974081022
+   },
+   "chosen": "tfidf=C1_ng2"
+  },
+  "bilstm": {
+   "dev_macro_f1": {
+    "bilstm=lr0.0003_h128": 0.4934202254358291,
+    "bilstm=lr0.0003_h256": 0.5187803703424732,
+    "bilstm=lr0.001_h128": 0.5261177160964571,
+    "bilstm=lr0.001_h256": 0.5335200927699809
+   },
+   "chosen": "bilstm=lr0.001_h256"
+  },
+  "roberta": {
+   "dev_macro_f1": {
+    "roberta=lr1e-05": 0.5593868644009139,
+    "roberta=lr2e-05": 0.558042913906689,
+    "roberta=lr3e-05": 0.5621470063266073
+   },
+   "chosen": "roberta=lr3e-05"
+  }
+ },
+ "systems": {
+  "prior": "prior",
+  "always_neutral": "always_neutral",
+  "tfidf": "tfidf=C1_ng2",
+  "bilstm": "bilstm=lr0.001_h256",
+  "roberta": "roberta=lr3e-05"
+ },
+ "best_dev_system": "roberta",
+ "predictor_correlation": {
+  "pearson_r": 0.5269335523265337,
+  "pearson_p": 0.004743105019723872,
+  "spearman_rho": 0.5152625152625152,
+  "vif": 1.3843876458420328,
+  "n_emotions": 27
+ },
+ "regression_bootstrap": {
+  "roberta_b_log_freq_ci": [
+   -0.05860551824642987,
+   -0.005569046257238081
+  ],
+  "roberta_b_agreement_ci": [
+   0.1336508407223308,
+   0.20934948637469664
+  ]
+ },
+ "gap_test": {
+  "rare_emotions": [
+   "desire",
+   "embarrassment",
+   "fear",
+   "grief",
+   "nervousness",
+   "pride",
+   "relief",
+   "remorse"
+  ],
+  "mean_gap_rare": 0.11093101155777085,
+  "mean_gap_frequent": 0.06398998639745676,
+  "difference": 0.04694102516031409,
+  "ci": [
+   -0.01637845179066062,
+   0.1082367258146405
+  ],
+  "p_boot(diff<=0)": 0.074,
+  "spearman_gap_vs_logfreq": -0.1684981684981685
+ },
+ "agreement_meta": {
+  "comments": 54178,
+  "rater_rows": 191639,
+  "raters_per_comment": {
+   "2": 1318.0,
+   "3": 36547.0,
+   "4": 2203.0,
+   "5": 14110.0
+  }
+ },
+ "error_types": {
+  "comments_with_any_error": 3228,
+  "share_errors_with_fn_and_fp_in_same_ekman_group": 0.14405204460966542
+ },
+ "data": {
+  "raw": {
+   "train": 43410,
+   "dev": 5426,
+   "test": 5427
+  },
+  "removed": {
+   "dev_in_train": 43,
+   "test_in_train": 37,
+   "test_in_dev": 5
+  },
+  "clean": {
+   "train": 43410,
+   "dev": 5383,
+   "test": 5385
+  }
+ }
+}

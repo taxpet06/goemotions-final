@@ -1,0 +1,16 @@
+gold_missed,predicted_instead,count,same_ekman_group
+annoyance,neutral,73,False
+disapproval,neutral,64,False
+neutral,approval,57,False
+realization,neutral,54,False
+approval,neutral,52,False
+neutral,annoyance,51,False
+neutral,admiration,46,False
+anger,neutral,46,False
+anger,annoyance,46,True
+disappointment,neutral,39,False
+neutral,curiosity,37,False
+admiration,neutral,35,False
+curiosity,neutral,30,False
+neutral,disapproval,29,False
+confusion,neutral,29,False

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+glove*.txt
+.impeccable/
+report/report.html
+report/*.before_rubric_pass.md
+error_analysis/*.xlsx
+error_analysis/*.bak.csv
+error_analysis/sheet.py
+outputs/cluster_logs/

@@ -1,0 +1,47 @@
+{
+ "args": {
+  "model": "roberta",
+  "lr": 3e-05,
+  "seed": 0,
+  "hidden": 256,
+  "epochs": 5,
+  "labels": "ekman",
+  "frac": 1.0,
+  "glove": "glove.6B.300d.txt",
+  "name": "ekman_roberta"
+ },
+ "best_dev_macro_f1": 0.6392912623071876,
+ "epochs": [
+  {
+   "epoch": 1,
+   "dev_macro_f1": 0.632396802726732,
+   "loss": 0.35457250475883484,
+   "sec": 267
+  },
+  {
+   "epoch": 2,
+   "dev_macro_f1": 0.6392912623071876,
+   "loss": 0.42325958609580994,
+   "sec": 266
+  },
+  {
+   "epoch": 3,
+   "dev_macro_f1": 0.6363702564657471,
+   "loss": 0.28539374470710754,
+   "sec": 267
+  },
+  {
+   "epoch": 4,
+   "dev_macro_f1": 0.6314800972991834,
+   "loss": 0.20441694557666779,
+   "sec": 270
+  },
+  {
+   "epoch": 5,
+   "dev_macro_f1": 0.627258153647495,
+   "loss": 0.25487199425697327,
+   "sec": 270
+  }
+ ],
+ "gpu": "NVIDIA GeForce RTX 2080 Ti"
+}

@@ -1,0 +1,47 @@
+{
+ "args": {
+  "model": "roberta",
+  "lr": 3e-05,
+  "seed": 2,
+  "hidden": 256,
+  "epochs": 5,
+  "labels": "goemotions",
+  "frac": 1.0,
+  "glove": "glove.6B.300d.txt",
+  "name": "roberta=lr3e-05"
+ },
+ "best_dev_macro_f1": 0.5556509821049928,
+ "epochs": [
+  {
+   "epoch": 1,
+   "dev_macro_f1": 0.5226150443499619,
+   "loss": 0.22707751393318176,
+   "sec": 66
+  },
+  {
+   "epoch": 2,
+   "dev_macro_f1": 0.550050466590559,
+   "loss": 0.14236566424369812,
+   "sec": 66
+  },
+  {
+   "epoch": 3,
+   "dev_macro_f1": 0.5556509821049928,
+   "loss": 0.254173219203949,
+   "sec": 68
+  },
+  {
+   "epoch": 4,
+   "dev_macro_f1": 0.5550885389512789,
+   "loss": 0.16925972700119019,
+   "sec": 68
+  },
+  {
+   "epoch": 5,
+   "dev_macro_f1": 0.5534571327490786,
+   "loss": 0.08386866748332977,
+   "sec": 68
+  }
+ ],
+ "gpu": "NVIDIA L40S"
+}

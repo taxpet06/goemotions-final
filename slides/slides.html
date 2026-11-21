@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>When Do Emotion Classifiers Fail?</title>
+<style>
+  @page { size: 1280px 720px; margin: 0; }
+  :root {
+    --ink: #0b0b0b; --ink-2: #52514e; --muted: #8a8984; --rule: #e6e5e0; --wash: #f4f3ef;
+    --tfidf: #2a78d6; --bilstm: #eb6834; --roberta: #1baf7a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #fff; color: var(--ink); font-family: "Inter", "Helvetica Neue", Arial, sans-serif; }
+  .slide { width: 1280px; height: 720px; padding: 56px 72px 40px; position: relative; break-after: page; overflow: hidden; display: flex; flex-direction: column; }
+  .kicker { font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 10px; }
+  h1 { font-size: 46px; line-height: 1.12; font-weight: 700; letter-spacing: -.01em; }
+  h2 { font-size: 34px; line-height: 1.18; font-weight: 700; margin-bottom: 22px; letter-spacing: -.005em; }
+  p, li { font-size: 21px; line-height: 1.42; color: var(--ink); }
+  .sub { color: var(--ink-2); }
+  ul { padding-left: 24px; } li { margin-bottom: 8px; }
+  .foot { position: absolute; left: 72px; right: 72px; bottom: 22px; font-size: 13px; color: var(--ink-2); display: flex; justify-content: space-between; }
+  .cols { display: grid; gap: 40px; flex: 1; min-height: 0; }
+  .c2 { grid-template-columns: 1fr 1fr; } .c37 { grid-template-columns: 0.9fr 1.1fr; }
+  table { border-collapse: collapse; width: 100%; font-size: 20px; }
+  th { text-align: right; font-weight: 600; color: var(--ink-2); font-size: 15px; padding: 6px 10px; border-bottom: 1.5px solid var(--ink-2); }
+  td { text-align: right; padding: 9px 10px; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
+  th:first-child, td:first-child { text-align: left; }
+  .sw { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; }
+  .best td { font-weight: 700; }
+  .big { font-size: 50px; font-weight: 700; line-height: 1; letter-spacing: -.02em; }
+  .stat { border-left: 3px solid var(--ink); padding-left: 16px; }
+  .stat .lab { font-size: 17px; color: var(--ink-2); margin-top: 6px; line-height: 1.3; }
+  img { max-width: 100%; display: block; }
+  .note { font-size: 16px; color: var(--ink-2); line-height: 1.4; }
+  .pill { display: inline-block; background: var(--wash); border-radius: 6px; padding: 2px 8px; font-size: 16px; color: var(--ink-2); }
+  .refs li { font-size: 13px; line-height: 1.35; color: var(--ink-2); margin-bottom: 2px; }
+  .slide:last-child { break-after: auto; }
+</style>
+</head>
+<body>
+
+<!-- 1. Title + question -->
+<section class="slide">
+  <div class="kicker">CS 74 final project · Track 1, applied ML</div>
+  <h1>When do emotion classifiers fail?<br><span style="font-weight:500;color:var(--ink-2)">Data scarcity, pretraining and label ambiguity in 27-way emotion detection</span></h1>
+  <div class="cols c2" style="margin-top:34px">
+    <div>
+      <p><b>Problem.</b> Triage and moderation systems care most about rare emotions (grief, nervousness, fear), which have the least data. A good average score can hide near-zero recall on them.</p>
+      <p style="margin-top:14px"><b>Data.</b> GoEmotions: 54k Reddit comments, 27 emotions + neutral, multi-label, 3 to 5 raters each. Grief has 77 training examples, admiration 4,130.</p>
+    </div>
+    <div>
+      <p><b>Questions</b></p>
+      <ul style="margin-top:6px">
+        <li>Does pretraining help most on <b>rare</b> emotions?</li>
+        <li>Does F1 track <b>rater agreement</b> more than frequency? (fit jointly, since the two are confounded)</li>
+        <li>Are errors label problems or model mistakes?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span></span><span>1 / 5</span></div>
+</section>
+
+<!-- 2. Pipeline + changes -->
+<section class="slide">
+  <h2>Pipeline: four systems, one protocol</h2>
+  <div class="cols c2">
+    <div>
+      <table>
+        <tr><th>System</th><th>Chosen on dev</th></tr>
+        <tr><td>Prior / always-neutral</td><td>floors</td></tr>
+        <tr><td><span class="sw" style="background:var(--tfidf)"></span>TF-IDF + LR</td><td>1-2 grams, C = 1</td></tr>
+        <tr><td><span class="sw" style="background:var(--bilstm)"></span>BiLSTM + GloVe</td><td>h 256, lr 1e-3</td></tr>
+        <tr><td><span class="sw" style="background:var(--roberta)"></span>RoBERTa-base</td><td>lr 3e-5, ≤ 5 epochs</td></tr>
+      </table>
+      <ul style="margin-top:22px">
+        <li>Removed <b>85 duplicated</b> dev/test comments (leakage)</li>
+        <li>Grid, early stopping and <b>per-label thresholds on dev</b>; test scored once</li>
+        <li>3 seeds per neural config; paired bootstrap, 1,000 resamples</li>
+      </ul>
+    </div>
+    <div>
+      <p><b>Changes from the proposal</b></p>
+      <ul style="margin-top:6px">
+        <li>Frequency and agreement go into <b>one regression</b>, and we report their correlation <span class="pill">feedback</span></li>
+        <li>ROC-AUC and <b>prevalence-normalized AP</b> next to raw PR-AUC <span class="pill">feedback</span></li>
+        <li>Agreement = Krippendorff's α computed from the raw per-rater files</li>
+        <li>Weighted BCE with √(neg/pos); the full ratio (~560) was unstable</li>
+        <li>Ran on Discovery GPUs instead of Colab</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>GoEmotions (Demszky et al., 2020) · train 43,410 / dev 5,383 / test 5,385</span><span>2 / 5</span></div>
+</section>
+
+<!-- 3. Results -->
+<section class="slide">
+  <h2>RoBERTa is best on every metric: +0.08 macro-F1 over TF-IDF</h2>
+  <div class="cols" style="grid-template-columns:1.15fr 0.85fr;gap:36px;flex:0 0 auto">
+    <table>
+      <tr><th>Test (n = 5,385)</th><th>Macro-F1</th><th>ROC-AUC</th><th>Norm. AP</th></tr>
+      <tr><td>Prior</td><td>0.042</td><td>0.50</td><td>0.00</td></tr>
+      <tr><td><span class="sw" style="background:var(--tfidf)"></span>TF-IDF + LR</td><td>0.457</td><td>0.90</td><td>0.39</td></tr>
+      <tr><td><span class="sw" style="background:var(--bilstm)"></span>BiLSTM + GloVe</td><td>0.498 ± .005</td><td>0.92</td><td>0.46</td></tr>
+      <tr class="best"><td><span class="sw" style="background:var(--roberta)"></span>RoBERTa-base</td><td>0.534 ± .003</td><td>0.93</td><td>0.50</td></tr>
+    </table>
+    <div>
+      <p class="note">Paired bootstrap Δ macro-F1:<br>RoBERTa − TF-IDF <b>+0.077</b> [0.056, 0.096]<br>RoBERTa − BiLSTM <b>+0.035</b> [0.016, 0.053]</p>
+      <p class="note" style="margin-top:12px">Per-label thresholds add +0.04 for RoBERTa (global 0.5 gives 0.497), mostly on rare emotions. Published BERT: 0.46.</p>
+    </div>
+  </div>
+  <img src="../results/figures/fig_per_emotion_f1.png" alt="Per-emotion F1 for three models, sorted by frequency" style="max-height:330px;margin:14px auto 0">
+  <div class="foot"><span>Mean ± SD over 3 seeds · normalized AP = (AP − prevalence) / (1 − prevalence)</span><span>3 / 5</span></div>
+</section>
+
+<!-- 4. Frequency vs agreement -->
+<section class="slide">
+  <h2>Rater agreement, not data size, predicts which emotions fail</h2>
+  <img src="../results/figures/fig_frequency_agreement.png" alt="F1 vs frequency, F1 vs agreement, and frequency vs agreement" style="max-height:300px;margin:0 auto">
+  <div class="cols" style="grid-template-columns:1fr 1fr 1fr;gap:28px;margin-top:18px;flex:0 0 auto;align-items:start">
+    <div class="stat"><div class="big">r = 0.53</div><div class="lab">frequency and agreement are confounded (n = 27 emotions)</div></div>
+    <div class="stat"><div class="big">+0.16</div><div class="lab">RoBERTa F1 per SD of α, with frequency held fixed [0.13, 0.18]. Frequency: −0.03. R² = 0.89</div></div>
+    <div class="stat"><div class="big">+0.05</div><div class="lab">extra RoBERTa gain on the 8 rare emotions, 95% CI [−0.02, 0.11]: suggestive, not significant</div></div>
+  </div>
+  <div class="foot"><span>OLS of per-emotion test F1 on z(log train count) + z(Krippendorff's α); same pattern for TF-IDF and BiLSTM</span><span>4 / 5</span></div>
+</section>
+
+<!-- 5. Errors, limits, next steps, refs -->
+<section class="slide">
+  <h2>Most errors are "emotion or neutral?", not "which emotion?"</h2>
+  <div class="cols c2">
+    <div>
+      <ul>
+        <li>Top confusions: annoyance → neutral (73), disapproval → neutral (64), neutral → approval (57). Only 14% stay inside an Ekman family.</li>
+        <li>RoBERTa with 10% of the data ≈ TF-IDF with all of it; its lead on rare emotions is +0.16 at 10% data vs +0.08 on frequent ones.</li>
+      </ul>
+      <p style="margin-top:14px"><b>Limitations.</b> 27 points per regression; grief has 5 test comments; α and gold labels come from the same raters; one domain.</p>
+    </div>
+    <div>
+      <p><b>Next steps</b></p>
+      <ul style="margin-top:6px">
+        <li>Train and evaluate on <b>soft labels</b> (rater vote shares)</li>
+        <li>Re-annotate low-α emotions to measure label noise</li>
+        <li>Pooled or cross-validated thresholds for tiny labels</li>
+      </ul>
+      <ol class="refs" style="margin-top:22px;padding-left:18px">
+        <li>Demszky et al. (2020). GoEmotions. ACL.</li>
+        <li>Liu et al. (2019). RoBERTa. arXiv:1907.11692.</li>
+        <li>Pennington et al. (2014). GloVe. EMNLP.</li>
+        <li>Lipton et al. (2014). Optimal thresholding for F1. ECML PKDD.</li>
+        <li>Krippendorff (2011). Computing Krippendorff's alpha-reliability.</li>
+        <li>Ekman (1992). An argument for basic emotions.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="foot"><span></span><span>5 / 5</span></div>
+</section>
+
+</body>
+</html>

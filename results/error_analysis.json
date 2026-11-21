@@ -1,0 +1,23 @@
+{
+ "n_coded": 97,
+ "shared_fleiss_kappa": 0.1909620991253644,
+ "shared_ties": [
+  "eetfp2o",
+  "ed4h3m7",
+  "ed4edc8"
+ ],
+ "breakdown": {
+  "label_noise": 24,
+  "sarcasm": 3,
+  "adjacent_emotion": 34,
+  "missing_context": 16,
+  "model_error": 20
+ },
+ "share": {
+  "label_noise": 0.24742268041237114,
+  "sarcasm": 0.030927835051546393,
+  "adjacent_emotion": 0.35051546391752575,
+  "missing_context": 0.16494845360824742,
+  "model_error": 0.20618556701030927
+ }
+}

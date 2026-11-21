@@ -1,0 +1,47 @@
+{
+ "args": {
+  "model": "roberta",
+  "lr": 3e-05,
+  "seed": 1,
+  "hidden": 256,
+  "epochs": 5,
+  "labels": "goemotions",
+  "frac": 1.0,
+  "glove": "glove.6B.300d.txt",
+  "name": "roberta=lr3e-05"
+ },
+ "best_dev_macro_f1": 0.5683030174327957,
+ "epochs": [
+  {
+   "epoch": 1,
+   "dev_macro_f1": 0.5361303641365741,
+   "loss": 0.3002783954143524,
+   "sec": 232
+  },
+  {
+   "epoch": 2,
+   "dev_macro_f1": 0.5670113524134656,
+   "loss": 0.1976982057094574,
+   "sec": 230
+  },
+  {
+   "epoch": 3,
+   "dev_macro_f1": 0.5644288241109998,
+   "loss": 0.20216311514377594,
+   "sec": 230
+  },
+  {
+   "epoch": 4,
+   "dev_macro_f1": 0.5683030174327957,
+   "loss": 0.19082686305046082,
+   "sec": 230
+  },
+  {
+   "epoch": 5,
+   "dev_macro_f1": 0.5661627739594437,
+   "loss": 0.16215549409389496,
+   "sec": 230
+  }
+ ],
+ "gpu": "Tesla V100-PCIE-32GB"
+}
